@@ -8,6 +8,8 @@ import time
 class stabilizer:
 	def __init__(self,id=""):
 		self.uav_id=id
+		self.velocity = TwistStamped().twist.linear
+		self.position = PoseStamped().pose.position
 
 	# fetch the position of the quadrotor
 	def poscallback(self,data):
@@ -32,12 +34,16 @@ class stabilizer:
 
 		ref_pos=Vector3()
 		ref_att=Vector3()
+		ref_pos.z = 0
 
 		while not (rospy.is_shutdown()):
-			ref_pos.z=2
-			tr=0.6 # thrust
-			xr=0   # roll angle
-			yr=0   # pitch angle
+			a_x = 0
+			a_y = 0
+			a_z = 0
+			# Following is the physical conversion
+			tr = 0.65 + (a_z/10.0)  # thrust
+			xr = a_y/10.0  # roll angle
+			yr = -a_x/10.0   # pitch angle
 			pubth.publish(tr)
 
 			q=tf_conversions.transformations.quaternion_from_euler(-yr,xr,0)

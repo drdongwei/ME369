@@ -12,7 +12,7 @@ hold on
 ha=plot(t,a,'r','erasemode', 'xor')
 hv=plot(t,v,'g','erasemode', 'xor')
 hx=plot(t,x,'b','erasemode', 'xor')
-xlim([0,6]); ylim([-1,2]);
+xlim([0,10]); ylim([-1,5]);
 legend('mass','a','v','x')
 grid on
 
@@ -22,7 +22,7 @@ i=0; dt=0.01; mt=t;ma=a; mv=v; mx=x;
 for i=1:600
     t=dt*i;
 
-    F=0;
+    F=0.0;
 
 %-----------------------------------------------------------------------------------------
 % controller
