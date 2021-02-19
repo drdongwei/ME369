@@ -1,0 +1,19 @@
+<launch>
+
+    <!--注：  使用Gazebo仿真，须首先启动PX4在Gazebo下的仿真场景                     -->
+    <!--     定位到px4源码的package，执行：make posix_sitl_default gazebo        -->
+
+    <!--启动mavros，连接到本地host服务器-->
+    <include file="$(find px4)/launch/mavros_posix_sitl.launch" />
+
+
+    <!--启动offboard控制，该节点为通过service消息程序启动offboard控制-->
+    <node pkg="offboard" type="offboard_node" name="offboard_node"  output="screen"> </node>
+
+
+    <node pkg="rqt_plot" type="rqt_plot" name="rqt_plotpos" args="/mavros/local_position/pose/pose/position/x:y:z"/> 
+    
+    <!--node pkg="rqt_plot" type="rqt_plot" name="rqt_plotvel" args="/mavros/local_position/velocity/twist/linear/x:y:z"/--> 
+
+    <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure"> </node>
+</launch>

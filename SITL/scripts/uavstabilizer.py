@@ -4,6 +4,8 @@ from std_msgs.msg import String,Float32,Float64MultiArray
 import tf_conversions
 from geometry_msgs.msg import PoseStamped,TwistStamped,Quaternion,Vector3
 import time
+from offboard.cfg import offboard_Config
+from dynamic_reconfigure.server import Server
 
 class stabilizer:
 	def __init__(self,id=""):
@@ -11,18 +13,23 @@ class stabilizer:
 		self.velocity = TwistStamped().twist.linear
 		self.position = PoseStamped().pose.position
 
+	def update_param(self, config, level):
+		self.az = float(config['AZ'])
+		return config
+
 	# fetch the position of the quadrotor
 	def poscallback(self,data):
 		self.position=data.pose.position
 
 	# fetch the velocity of the quadrotor
 	def velcallback(self,data):
-		self.velocity=data.twist.linear
+		self.velocity = data.twist.linear
 
 	# control thread
 	def control(self):
 		rospy.init_node('offboard_control', anonymous=True)
 		rospy.loginfo(" master:start offboard control..")
+		self.srv = Server(offboard_Config, self.update_param)
 		rate=rospy.Rate(30)
 		rate.sleep()
 
@@ -39,7 +46,7 @@ class stabilizer:
 		while not (rospy.is_shutdown()):
 			a_x = 0
 			a_y = 0
-			a_z = 0
+			a_z = self.az
 			# Following is the physical conversion
 			tr = 0.65 + (a_z/10.0)  # thrust
 			xr = a_y/10.0  # roll angle
