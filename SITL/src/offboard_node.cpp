@@ -6,7 +6,7 @@
 //
 
 #include <ros/ros.h>
-
+#include<stdio.h>
 #include <std_msgs/Float32.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Quaternion.h>
@@ -30,6 +30,7 @@ void thrust_cb(const std_msgs::Float32::ConstPtr& msg){
     targetattitude.thrust = msg->data;      //将接收到的油门信息放入targetattitude中
 }
 void orientation_cb(const geometry_msgs::Quaternion::ConstPtr& msg){
+    //std::cout<<msg->w<<std::endl;
     targetattitude.orientation = *msg;      //将接收到的姿态信息放入targetattitude中
 }
 
@@ -55,7 +56,7 @@ int main(int argc, char **argv)
             ("mavros/set_mode");
 
 //    the setpoint publishing rate MUST be faster than 2Hz
-    ros::Rate rate(50.0);
+    ros::Rate rate(20.0);
 
 //     wait for FCU connection
     while(ros::ok() && !current_state.connected){
