@@ -51,10 +51,11 @@ class stabilizer:
 			# Following is the physical conversion
 			v_ref[0] = 1*(-self.position.x)
 			v_ref[1] = 1*(-self.position.y)
-			v_ref[2] = 0.5*(self.az - self.position.z)
+			v_ref[2] = 1.5*(self.az - self.position.z)
 			a_ref[0] = 3*(v_ref[0] - self.velocity.x)
 			a_ref[1] = 2*(v_ref[1] - self.velocity.y)
 			a_ref[2] = 1*(v_ref[2] - self.velocity.z)
+			#a_ref[2] = v_ref[2]
 			a_ref[0] = max(min(a_ref[0],3),-3)
 			a_ref[1] = max(min(a_ref[1],3),-3)
 			a_ref[2] = max(min(a_ref[2],3),-3)
