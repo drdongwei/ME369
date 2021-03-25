@@ -12,9 +12,14 @@ class stabilizer:
 		self.uav_id=id
 		self.velocity = TwistStamped().twist.linear
 		self.position = PoseStamped().pose.position
+		self.az = 0
+		self.kp = 0
+		self.kv = 0
 
 	def update_param(self, config, level):
 		self.az = float(config['AZ'])
+		self.kp = float(config['kp'])
+		self.kv = float(config['kv'])
 		return config
 
 	# fetch the position of the quadrotor
@@ -49,10 +54,10 @@ class stabilizer:
 			a_y = 0
 			a_z = self.az
 			# Following is the physical conversion
-			v_ref[0] = 1*(-self.position.x)
+			v_ref[0] = self.kp*(-self.position.x)
 			v_ref[1] = 1*(-self.position.y)
 			v_ref[2] = 1.5*(self.az - self.position.z)
-			a_ref[0] = 3*(v_ref[0] - self.velocity.x)
+			a_ref[0] = self.kv*(v_ref[0] - self.velocity.x)
 			a_ref[1] = 2*(v_ref[1] - self.velocity.y)
 			a_ref[2] = 1*(v_ref[2] - self.velocity.z)
 			#a_ref[2] = v_ref[2]
